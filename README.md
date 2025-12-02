@@ -5,24 +5,23 @@
 ![License](https://img.shields.io/badge/License-GPL%20v2-blue.svg)
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)
 
-**ContentPilot** is an enterprise-grade WordPress plugin that revolutionizes content creation by automatically transforming the latest news articles into unique, engaging blog posts using advanced AI technology. With ContentPilot, you get microservices architecture, offline AI content humanization, Google EEAT compliance, and advanced SEO optimization - all designed to supercharge your content marketing strategy.
+**ContentPilot** is an enterprise-grade WordPress plugin that revolutionizes content creation by automatically transforming the latest news articles into unique, engaging blog posts using advanced AI technology. With ContentPilot, you get microservices architecture, offline AI content humanization, Google EEAT compliance, and **advanced RankMath SEO integration** - all designed to supercharge your content marketing strategy.
 
 ## 🚀 Features
 
 ### Core Features (All Included)
-- **AI Content Generation**: Support for OpenAI GPT, Anthropic Claude, and OpenRouter APIs
+- **AI Content Generation**: Support for OpenRouter (default), OpenAI GPT, Anthropic Claude, and custom APIs
 - **Offline AI Content Humanization**: Make AI-generated content appear more human-written using the humano Python package
 - **RSS Feed Integration**: Fetch latest news from popular RSS feeds or custom feeds
 - **Large Batch Post Creation**: Generate up to 30 unique blog posts per batch
 - **Automated Scheduling**: Set up automatic post generation with WP-Cron
 - **Featured Image Generation**: AI-powered featured images for posts
-- **SEO Optimization**: Automatic meta descriptions and SEO-friendly content
+- **Advanced SEO Optimization**: **RankMath SEO integration** with automatic meta descriptions, title optimization, and content structure analysis
 - **Advanced Analytics**: Track post performance and engagement
 - **Customizable Content**: Configure tone of voice, word count, and categories
 - **Security First**: Encrypted API key storage and comprehensive input sanitization
 - **WordPress Native**: Built with WordPress coding standards and native UI
 - **Microservices Architecture**: Enterprise-grade performance and scalability
-- **RankMath SEO Integration**: Advanced SEO analysis and optimization
 - **Real-time Monitoring**: Live performance metrics and health monitoring
 
 ## 📋 Requirements
@@ -30,8 +29,9 @@
 - WordPress 5.0 or higher
 - PHP 7.4 or higher
 - MySQL 5.6 or higher
-- OpenAI API key or Anthropic API key
+- **OpenRouter API key (recommended default)** or OpenAI/Anthropic API key
 - cURL extension enabled
+- RankMath SEO plugin (recommended for full SEO features)
 
 ## 🔧 Installation
 
@@ -59,13 +59,21 @@ cp -r . /path/to/wordpress/wp-content/plugins/contentpilot/
 
 1. After activation, navigate to **Settings > ContentPilot**
 2. Configure the following settings:
-   - **LLM Provider**: Choose between OpenAI, Anthropic, or Custom API
+   - **LLM Provider**: Choose between OpenRouter (default), OpenAI, Anthropic, or Custom API
    - **API Key**: Enter your API key (stored securely and encrypted)
    - **Categories**: Select WordPress categories for generated posts
    - **Word Count**: Choose short (300-500), medium (500-800), or long (800-1200) posts
    - **Tone of Voice**: Select Neutral, Professional, or Friendly tone
+   - **RankMath SEO Integration**: Enable/disable advanced SEO features
 
 ### Getting API Keys
+
+#### OpenRouter API Key (Recommended Default)
+1. Visit [OpenRouter](https://openrouter.ai/)
+2. Sign up or log in to your account
+3. Navigate to **API Keys** section
+4. Create a new API key
+5. Copy and paste into the plugin settings
 
 #### OpenAI API Key
 1. Visit [OpenAI Platform](https://platform.openai.com/)
@@ -136,6 +144,12 @@ contentpilot/
 
 ### Supported AI Providers
 
+#### OpenRouter Integration (Default)
+- **Models**: Multiple provider models available
+- **Endpoint**: `https://openrouter.ai/api/v1`
+- **Authentication**: Bearer token
+- **Benefits**: Single API key for multiple AI providers
+
 #### OpenAI Integration
 - **Model**: GPT-3.5-turbo (default) or GPT-4
 - **Endpoint**: `https://api.openai.com/v1/chat/completions`
@@ -149,6 +163,33 @@ contentpilot/
 #### Custom API
 - Configurable endpoint and authentication
 - Must follow OpenAI-compatible response format
+
+## 🎨 RankMath SEO Integration
+
+ContentPilot features deep integration with RankMath SEO plugin for advanced search engine optimization:
+
+### Automatic SEO Features
+- **Title Optimization**: AI-generated titles with SEO best practices
+- **Meta Description Generation**: Automatic, engaging meta descriptions
+- **Content Structure Analysis**: Ensures proper heading hierarchy (H1, H2, H3)
+- **Keyword Optimization**: Intelligent keyword placement and density
+- **Readability Analysis**: Content scoring for readability and engagement
+- **Schema Markup**: Automatic generation of structured data
+- **Focus Keyword Analysis**: RankMath integration for target keywords
+- **Content Length Optimization**: Recommends ideal content length
+
+### SEO Performance Monitoring
+- **Real-time SEO Scoring**: Instant feedback on content quality
+- **RankMath Integration Dashboard**: View SEO metrics within ContentPilot
+- **Automatic SEO Suggestions**: AI-powered recommendations for improvement
+- **Bulk SEO Optimization**: Apply SEO best practices to multiple posts
+
+### Advanced SEO Settings
+- **Custom SEO Templates**: Create reusable SEO patterns for different content types
+- **SEO Preset Management**: Save and apply SEO configurations
+- **Automatic Internal Linking**: Intelligent suggestion of related content
+- **Image Alt Text Optimization**: AI-generated descriptive alt text
+- **Canonical URL Management**: Prevent duplicate content issues
 
 ## 🐛 Troubleshooting
 
@@ -168,6 +209,11 @@ contentpilot/
 - Ensure user has `manage_options` capability
 - Check WordPress file permissions
 - Verify plugin activation was successful
+
+**SEO features not working**
+- Ensure RankMath SEO plugin is installed and activated
+- Check RankMath API connectivity
+- Verify SEO module is enabled in ContentPilot settings
 
 ### Debug Mode
 Enable WordPress debug mode to see detailed error messages:
@@ -213,6 +259,10 @@ cp -r . /path/to/wordpress/wp-content/plugins/contentpilot/
 - ✅ Improved README with compelling marketing content
 - ✅ Updated all documentation files with modern ContentPilot identity
 - ✅ Verified all user-facing text reflects ContentPilot branding
+- ✅ **Set OpenRouter as default API provider** for multi-model access
+- ✅ **Added "Get OpenRouter API Key" button** to admin interface
+- ✅ **Enhanced RankMath SEO integration** with advanced features
+- ✅ **Updated all SEO documentation** with actual RankMath capabilities
 
 ### Version 1.3.0 (2025-11-30)
 - 🎉 **ALL FEATURES NOW FREE!** Converted all premium features to core functionality
@@ -262,6 +312,8 @@ cp -r . /path/to/wordpress/wp-content/plugins/contentpilot/
 - [ ] Custom personality training
 - [ ] Advanced scheduling options
 - [ ] Integration marketplace
+- [ ] Expanded RankMath SEO features
+- [ ] AI-powered content audits
 
 ### Version 3.0.0 (Future)
 - [ ] Advanced AI model fine-tuning
@@ -270,6 +322,8 @@ cp -r . /path/to/wordpress/wp-content/plugins/contentpilot/
 - [ ] White-label solutions
 - [ ] Advanced customization options
 - [ ] Professional services integration
+- [ ] Deep RankMath SEO automation
+- [ ] AI-driven content strategy recommendations
 
 ## 📄 License
 
@@ -284,7 +338,8 @@ This project is licensed under the GPL v2 License - see the [LICENSE](LICENSE) f
 ## 🙏 Acknowledgments
 
 - WordPress community for excellent documentation
-- OpenAI and Anthropic for powerful AI APIs
+- OpenAI, Anthropic, and OpenRouter for powerful AI APIs
+- RankMath team for excellent SEO plugin integration
 - RSS feed providers for news content
 - Beta testers and early adopters
 

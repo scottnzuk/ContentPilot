@@ -253,7 +253,7 @@ cp -r . /path/to/wordpress/wp-content/plugins/contentpilot/
 ## 📝 Changelog
 
 ### Version 2.0.0 (2025-12-02)
-- 🎉 **COMPLETE REBRANDING**: Transformed from AI Auto News Poster to ContentPilot
+- 🎉 **COMPLETE REBRANDING**: Transformed to ContentPilot
 - ✅ Updated all branding, documentation, and user-facing text
 - ✅ Enhanced plugin description with professional ContentPilot messaging
 - ✅ Improved README with compelling marketing content

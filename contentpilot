@@ -1,0 +1,826 @@
+<?php
+/**
+ * Plugin Name: AI Auto News Poster Enhanced
+ * Plugin URI: https://github.com/scottnzuk/ai-auto-news-poster-enhanced
+ * Description: Enterprise-grade AI content generation and SEO optimization WordPress plugin with offline AI content humanization, microservices architecture, and advanced analytics.
+ * Version: 1.3.0
+ * Author: scottnzuk
+ * Author URI: https://github.com/scottnzuk
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: ai-auto-news-poster
+ *
+ * Requires at least: 5.0
+ * Tested up to: 6.8
+ * Requires PHP: 7.4
+ * Network: False
+ *
+ * @package AI_Auto_News_Poster
+ * @version 1.1.0
+ */
+
+// Prevent direct access to this file
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Define plugin constants with proper documentation
+/**
+ * Plugin version constant
+ * 
+ * @since 1.0.0
+ * @var string
+ */
+define('AANP_VERSION', '1.3.0');
+
+/**
+ * Plugin directory path constant
+ * 
+ * @since 1.0.0
+ * @var string
+ */
+define('AANP_PLUGIN_DIR', plugin_dir_path(__FILE__));
+
+/**
+ * Plugin directory URL constant
+ * 
+ * @since 1.0.0
+ * @var string
+ */
+define('AANP_PLUGIN_URL', plugin_dir_url(__FILE__));
+
+/**
+ * Main plugin file path constant
+ * 
+ * @since 1.0.0
+ * @var string
+ */
+define('AANP_PLUGIN_FILE', __FILE__);
+
+/**
+ * Main AI Auto News Poster Plugin Class
+ * 
+ * This class serves as the main entry point for the plugin and handles
+ * initialization, activation, deactivation, and core functionality.
+ * 
+ * @since 1.0.0
+ * @author scottnzuk
+ * @copyright 2025 scottnzuk
+ * @package AI_Auto_News_Poster
+ */
+class AI_Auto_News_Poster {
+    
+    /**
+     * Error Handler instance for centralized error management
+     * 
+     * @since 1.1.0
+     * @var AANP_Error_Handler|null
+     */
+    private $error_handler;
+    
+    /**
+     * Plugin activation timestamp
+     * 
+     * @since 1.0.0
+     * @var string|null
+     */
+    private $activation_time;
+    
+    /**
+     * Required PHP version constant
+     * 
+     * @since 1.1.0
+     * @var string
+     */
+    const REQUIRED_PHP_VERSION = '7.4';
+    
+    /**
+     * Required WordPress version constant
+     * 
+     * @since 1.1.0
+     * @var string
+     */
+    const REQUIRED_WP_VERSION = '5.0';
+    
+    /**
+     * Class constructor - initializes the plugin
+     * 
+     * Sets up WordPress hooks for plugin initialization, activation, 
+     * deactivation, and admin initialization.
+     * 
+     * @since 1.0.0
+     */
+    public function __construct() {
+        // Initialize error handler early
+        $this->init_error_handler();
+        
+        // Register activation hook
+        register_activation_hook(__FILE__, array($this, 'activate'));
+        
+        // Register deactivation hook
+        register_deactivation_hook(__FILE__, array($this, 'deactivate'));
+        
+        // Register initialization hooks
+        add_action('init', array($this, 'init'));
+        add_action('admin_init', array($this, 'activation_redirect'));
+        
+        // Store activation time for performance monitoring
+        $this->activation_time = current_time('Y-m-d H:i:s', true);
+        
+        // Log plugin construction
+        if ($this->error_handler) {
+            $this->error_handler->log_info('Plugin constructor executed', array(
+                'version' => AANP_VERSION,
+                'activation_time' => $this->activation_time
+            ));
+        }
+    }
+    
+    /**
+     * Initialize the centralized error handler
+     * 
+     * Sets up error handling system with proper fallback mechanisms
+     * to ensure the plugin remains functional even if error handler fails.
+     * 
+     * @since 1.1.0
+     * @private
+     */
+    private function init_error_handler() {
+        try {
+            // Load error handler and exceptions classes
+            require_once AANP_PLUGIN_DIR . 'includes/class-error-handler.php';
+            require_once AANP_PLUGIN_DIR . 'includes/class-exceptions.php';
+            
+            // Initialize error handler with error handling for itself
+            $this->error_handler = AANP_Error_Handler::getInstance();
+            
+        } catch (Exception $e) {
+            // Fallback to basic PHP error handling
+            error_log('AANP: Failed to initialize error handler - ' . $e->getMessage());
+            $this->error_handler = null;
+        }
+    }
+    
+    /**
+     * Initialize the plugin after WordPress is fully loaded
+     * 
+     * This method loads all necessary components, initializes admin
+     * functionality, and sets up the plugin environment.
+     * 
+     * @since 1.0.0
+     * @global object $wp_version WordPress version
+     * @throws AANP_Initialization_Exception If critical initialization fails
+     */
+    public function init() {
+        try {
+            // Load text domain for internationalization (WordPress 4.6+ handles this automatically)
+            
+            // Load all include files with error handling
+            $this->load_includes();
+            
+            // Initialize admin functionality if in admin area
+            if (is_admin()) {
+                $this->init_admin();
+            }
+            
+            // Log successful initialization
+            if ($this->error_handler) {
+                $this->error_handler->log_info('Plugin initialization completed successfully');
+            }
+            
+        } catch (AANP_Initialization_Exception $e) {
+            $this->handle_critical_error($e, 'Plugin initialization failed');
+            
+        } catch (Exception $e) {
+            $this->handle_general_error($e, 'Unexpected error during plugin initialization');
+        }
+    }
+    
+    /**
+     * Load all required include files
+     * 
+     * Handles loading of all plugin class files with proper error handling.
+     * Uses a sequential approach to ensure proper dependency order.
+     * 
+     * @since 1.0.0
+     * @private
+     * @throws AANP_Configuration_Exception If critical include files are missing
+     */
+    private function load_includes() {
+        // Define core files in dependency order
+        $core_files = array(
+            // Base classes first
+            'includes/class-cache-manager.php',
+            'includes/class-logger.php',
+            
+            // Security and performance
+            'includes/class-security-manager.php',
+            'includes/class-performance-optimizer.php',
+            
+            // Error handling (new in 1.1.0)
+            'includes/class-error-handler.php',
+            'includes/class-exceptions.php',
+            
+            // Core functionality
+            'includes/class-rate-limiter.php',
+            'includes/class-admin-settings.php',
+            'includes/class-news-fetch.php',
+            'includes/class-ai-generator.php',
+            'includes/class-post-creator.php',
+            
+            // Feature management
+            'includes/class-pro-features.php'
+        );
+        
+        $loaded_files = array();
+        
+        foreach ($core_files as $file) {
+            $file_path = AANP_PLUGIN_DIR . $file;
+            
+            if (!file_exists($file_path)) {
+                throw new AANP_Configuration_Exception(
+                    sprintf('Required file not found: %s', $file),
+                    0,
+                    null,
+                    array('file' => $file, 'file_path' => $file_path)
+                );
+            }
+            
+            try {
+                require_once $file_path;
+                $loaded_files[] = $file;
+                
+            } catch (Exception $e) {
+                $this->handle_file_load_error($file, $e);
+            }
+        }
+        
+        // Log loaded files for debugging
+        if ($this->error_handler) {
+            $this->error_handler->log_info('Core files loaded', array(
+                'files_loaded' => $loaded_files,
+                'total_files' => count($core_files)
+            ));
+        }
+    }
+    
+    /**
+     * Initialize admin functionality
+     * 
+     * Sets up admin-specific components with proper error handling
+     * to ensure admin functionality is robust.
+     * 
+     * @since 1.0.0
+     * @private
+     */
+    private function init_admin() {
+        try {
+            // Initialize security manager for admin protection
+            if (class_exists('AANP_Security_Manager')) {
+                new AANP_Security_Manager();
+            }
+            
+            // Initialize performance optimizer for admin efficiency
+            if (class_exists('AANP_Performance_Optimizer')) {
+                new AANP_Performance_Optimizer();
+            }
+            
+            // Initialize admin settings interface
+            if (class_exists('AANP_Admin_Settings')) {
+                new AANP_Admin_Settings();
+            }
+            
+        } catch (Exception $e) {
+            $this->handle_admin_error($e);
+        }
+    }
+    
+    /**
+     * Handle critical errors that prevent plugin functionality
+     * 
+     * @param Exception $exception The exception to handle
+     * @param string $message Additional context message
+     * @since 1.1.0
+     * @private
+     */
+    private function handle_critical_error($exception, $message = '') {
+        // Log critical error
+        if ($this->error_handler) {
+            $exception->log($this->error_handler, 'CRITICAL');
+        }
+        
+        // Deactivate plugin on critical errors
+        deactivate_plugins(plugin_basename(__FILE__));
+        
+        // Display user-friendly error message
+        wp_die(
+            esc_html__('AI Auto News Poster has been deactivated due to a critical error.', 'ai-auto-news-poster'),
+            esc_html__('Plugin Deactivated', 'ai-auto-news-poster'),
+            array('response' => 500)
+        );
+    }
+    
+    /**
+     * Handle general errors during plugin operation
+     * 
+     * @param Exception $exception The exception to handle
+     * @param string $context Context information
+     * @since 1.1.0
+     * @private
+     */
+    private function handle_general_error($exception, $context = '') {
+        if ($this->error_handler) {
+            $exception->log($this->error_handler);
+        } else {
+            error_log(sprintf(
+                'AANP %s: %s in %s:%d',
+                $context,
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getLine()
+            ));
+        }
+    }
+    
+    /**
+     * Handle file loading errors gracefully
+     * 
+     * @param string $file_name The file that failed to load
+     * @param Exception $exception The exception that occurred
+     * @since 1.1.0
+     * @private
+     */
+    private function handle_file_load_error($file_name, $exception) {
+        $context = array(
+            'file' => $file_name,
+            'error' => $exception->getMessage()
+        );
+        
+        if ($this->error_handler) {
+            $this->error_handler->log_error('Failed to load include file', $context);
+        }
+        
+        // Continue loading other files, but log the failure
+        error_log(sprintf('AANP: Failed to load %s: %s', $file_name, $exception->getMessage()));
+    }
+    
+    /**
+     * Handle admin initialization errors
+     * 
+     * @param Exception $exception The exception that occurred
+     * @since 1.1.0
+     * @private
+     */
+    private function handle_admin_error($exception) {
+        if ($this->error_handler) {
+            $this->error_handler->log_error('Admin initialization failed', array(
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ));
+        }
+        
+        // Don't deactivate the entire plugin for admin errors
+        // Just log and continue without admin functionality
+    }
+    
+    /**
+     * Plugin activation handler
+     * 
+     * Handles all activation tasks including system compatibility checks,
+     * database setup, default option creation, and initial configuration.
+     * 
+     * @since 1.0.0
+     * @global object $wpdb WordPress database object
+     * @throws AANP_Initialization_Exception If activation requirements are not met
+     */
+    public function activate() {
+        try {
+            // Check system compatibility before any other activation tasks
+            $this->check_system_requirements();
+            
+            // Create required database tables
+            $this->create_database_tables();
+            
+            // Set up default plugin options
+            $this->setup_default_options();
+            
+            // Set activation redirect flag for first-time users
+            add_option('aanp_activation_redirect', true);
+            
+            // Record activation time and details
+            add_option('aanp_activation_time', current_time('Y-m-d H:i:s', true));
+            add_option('aanp_version', AANP_VERSION);
+            
+            // Clear any existing caches to ensure fresh start
+            if (function_exists('wp_cache_flush')) {
+                wp_cache_flush();
+            }
+            
+            // Log successful activation
+            if ($this->error_handler) {
+                $this->error_handler->log_info('Plugin activated successfully', array(
+                    'version' => AANP_VERSION,
+                    'activation_time' => current_time('Y-m-d H:i:s', true)
+                ));
+            }
+            
+        } catch (AANP_Compatibility_Exception $e) {
+            $this->handle_activation_failure($e);
+            
+        } catch (Exception $e) {
+            $this->handle_activation_failure($e);
+        }
+    }
+    
+    /**
+     * Check system requirements before plugin activation
+     * 
+     * Validates PHP version, WordPress version, and required functions
+     * to ensure compatibility before proceeding with activation.
+     * 
+     * @since 1.1.0
+     * @private
+     * @throws AANP_Compatibility_Exception If system requirements are not met
+     */
+    private function check_system_requirements() {
+        // Check PHP version compatibility
+        if (version_compare(PHP_VERSION, self::REQUIRED_PHP_VERSION, '<')) {
+            throw new AANP_Compatibility_Exception(
+                sprintf(
+                    /* translators: %1$s: PHP version, %2$s: required PHP version */
+                    __('AI Auto News Poster requires PHP %1$s or higher. Your current version is %2$s.', 'ai-auto-news-poster'),
+                    self::REQUIRED_PHP_VERSION,
+                    PHP_VERSION
+                ),
+                0,
+                null,
+                array(
+                    'current_version' => PHP_VERSION,
+                    'required_version' => self::REQUIRED_PHP_VERSION,
+                    'check_type' => 'php_version'
+                )
+            );
+        }
+        
+        // Check WordPress version compatibility
+        $wp_version = get_bloginfo('version');
+        if (version_compare($wp_version, self::REQUIRED_WP_VERSION, '<')) {
+            throw new AANP_Compatibility_Exception(
+                sprintf(
+                    /* translators: %1$s: WordPress version, %2$s: required WordPress version */
+                    __('AI Auto News Poster requires WordPress %1$s or higher. Your current version is %2$s.', 'ai-auto-news-poster'),
+                    self::REQUIRED_WP_VERSION,
+                    $wp_version
+                ),
+                0,
+                null,
+                array(
+                    'current_version' => $wp_version,
+                    'required_version' => self::REQUIRED_WP_VERSION,
+                    'check_type' => 'wordpress_version'
+                )
+            );
+        }
+        
+        // Check required WordPress functions
+        $required_functions = array('wp_remote_get', 'wp_remote_post', 'wp_verify_nonce');
+        foreach ($required_functions as $function) {
+            if (!function_exists($function)) {
+                throw new AANP_Compatibility_Exception(
+                    sprintf(
+                        /* translators: %s: function name */
+                        __('AI Auto News Poster requires the WordPress function %s which is not available.', 'ai-auto-news-poster'),
+                        $function
+                    ),
+                    0,
+                    null,
+                    array('missing_function' => $function)
+                );
+            }
+        }
+        
+        // Check required PHP extensions
+        $required_extensions = array('curl', 'json');
+        foreach ($required_extensions as $extension) {
+            if (!extension_loaded($extension)) {
+                throw new AANP_Compatibility_Exception(
+                    sprintf(
+                        /* translators: %s: PHP extension name */
+                        __('AI Auto News Poster requires the PHP extension %s which is not installed.', 'ai-auto-news-poster'),
+                        $extension
+                    ),
+                    0,
+                    null,
+                    array('missing_extension' => $extension)
+                );
+            }
+        }
+    }
+    
+    /**
+     * Create required database tables
+     * 
+     * Sets up any custom database tables needed for plugin functionality
+     * using WordPress dbDelta for safe table creation/updates.
+     * 
+     * @since 1.0.0
+     * @private
+     * @global object $wpdb WordPress database object
+     * @throws AANP_Database_Exception If table creation fails
+     */
+    private function create_database_tables() {
+        global $wpdb;
+        
+        $table_name = $wpdb->prefix . 'aanp_generated_posts';
+        $charset_collate = $wpdb->get_charset_collate();
+        
+        // Define the SQL for table creation
+        $sql = "CREATE TABLE {$table_name} (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            post_id bigint(20) NOT NULL,
+            source_url varchar(255) NOT NULL,
+            generated_at datetime DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            INDEX idx_post_id (post_id),
+            INDEX idx_generated_at (generated_at)
+        ) {$charset_collate};";
+        
+        // Use WordPress dbDelta for safe table creation
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        
+        $result = dbDelta($sql);
+        
+        // Check if table was created successfully
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") !== $table_name) {
+            throw new AANP_Database_Exception(
+                __('Failed to create required database table.', 'ai-auto-news-poster'),
+                0,
+                null,
+                array('table_name' => $table_name, 'sql_result' => $result)
+            );
+        }
+    }
+    
+    /**
+     * Set up default plugin options
+     * 
+     * Configures default settings for the plugin including LLM provider,
+     * content generation parameters, and RSS feed sources.
+     * 
+     * @since 1.0.0
+     * @private
+     */
+    private function setup_default_options() {
+        $default_options = array(
+            // LLM Configuration
+            'llm_provider' => 'openai',
+            'api_key' => '',
+            
+            // Content Generation Settings
+            'categories' => array(),
+            'word_count' => 'medium',
+            'tone' => 'neutral',
+            
+            // RSS Feed Sources
+            'rss_feeds' => array(
+                'https://feeds.bbci.co.uk/news/rss.xml',
+                'https://rss.cnn.com/rss/edition.rss',
+                'https://feeds.reuters.com/reuters/topNews'
+            ),
+            
+            // Advanced Settings
+            'cache_duration' => 3600, // 1 hour
+            'debug_mode' => false,
+            'rate_limit_enabled' => true
+        );
+        
+        // Add default options (only if they don't already exist)
+        add_option('aanp_settings', $default_options);
+    }
+    
+    /**
+     * Handle activation failures gracefully
+     * 
+     * @param Exception $exception The exception that caused the failure
+     * @since 1.1.0
+     * @private
+     */
+    private function handle_activation_failure($exception) {
+        // Deactivate the plugin
+        deactivate_plugins(plugin_basename(__FILE__));
+        
+        // Log the failure
+        if ($this->error_handler) {
+            $exception->log($this->error_handler, 'CRITICAL');
+        } else {
+            error_log('AANP Activation Error: ' . $exception->getMessage());
+        }
+        
+        // Display user-friendly error message
+        wp_die(
+            esc_html($exception->getUserFriendlyMessage()),
+            esc_html__('Plugin Activation Failed', 'ai-auto-news-poster'),
+            array('response' => 500)
+        );
+    }
+    
+    /**
+     * Plugin deactivation handler
+     * 
+     * Handles cleanup tasks when the plugin is deactivated including
+     * clearing scheduled events and performing any necessary cleanup.
+     * 
+     * @since 1.0.0
+     */
+    public function deactivate() {
+        try {
+            // Clear all scheduled events
+            wp_clear_scheduled_hook('aanp_scheduled_generation');
+            
+            // Clear any rate limiting data
+            if (class_exists('AANP_Rate_Limiter')) {
+                $rate_limiter = new AANP_Rate_Limiter();
+                // Clean up any pending rate limit entries
+                $rate_limiter->cleanup_expired_entries();
+            }
+            
+            // Clear any pending cache
+            if (function_exists('wp_cache_flush')) {
+                wp_cache_flush();
+            }
+            
+            // Log deactivation
+            if ($this->error_handler) {
+                $this->error_handler->log_info('Plugin deactivated', array(
+                    'deactivation_time' => current_time('Y-m-d H:i:s', true),
+                    'version' => AANP_VERSION
+                ));
+            }
+            
+        } catch (Exception $e) {
+            // Even if cleanup fails, complete deactivation
+            // Log the error for future debugging
+            error_log('AANP Deactivation Error: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Handle activation redirect for new users
+     * 
+     * Redirects new users to the plugin settings page after activation
+     * while handling edge cases like bulk activation properly.
+     * 
+     * @since 1.0.0
+     */
+    public function activation_redirect() {
+        // Only redirect for single plugin activation
+        if (get_option('aanp_activation_redirect', false)) {
+            delete_option('aanp_activation_redirect');
+            
+            // Ensure this isn't part of a bulk activation
+            if (!isset($_GET['activate-multi'])) {
+                // Build redirect URL with proper escaping
+                $redirect_url = add_query_arg(
+                    array(
+                        'aanp_activated' => '1',
+                        '_wpnonce' => wp_create_nonce('aanp_activation_redirect')
+                    ),
+                    admin_url('options-general.php?page=ai-auto-news-poster')
+                );
+                
+                wp_redirect($redirect_url);
+                exit;
+            }
+        }
+    }
+    
+    /**
+     * Check if Pro features are available
+     * 
+     * This method can be extended to detect Pro version installation
+     * and provides a consistent interface for feature availability.
+     * 
+     * @since 1.0.0
+     * @return bool True if Pro features are available
+     */
+    public static function is_pro_active() {
+        // Allow external plugins to control this via filter
+        return apply_filters('aanp_is_pro_active', false);
+    }
+    
+    /**
+     * Get Pro upgrade URL
+     * 
+     * Provides a centralized location for the upgrade URL that can be
+     * filtered or overridden by Pro version.
+     * 
+     * @since 1.0.0
+     * @return string Pro upgrade URL
+     */
+    public static function get_pro_upgrade_url() {
+        return apply_filters('aanp_pro_upgrade_url', admin_url('plugins.php'));
+    }
+    
+    /**
+     * Get maximum posts per batch based on version
+     * 
+     * Implements different limits for free vs Pro versions to encourage
+     * upgrades while maintaining functionality.
+     * 
+     * @since 1.0.0
+     * @return int Maximum number of posts per batch
+     */
+    public static function get_max_posts_per_batch() {
+        return self::is_pro_active() ? 30 : 5;
+    }
+    
+    /**
+     * Check if scheduling is available
+     * 
+     * @since 1.0.0
+     * @return bool True if scheduling is available
+     */
+    public static function is_scheduling_available() {
+        return self::is_pro_active();
+    }
+    
+    /**
+     * Check if featured image generation is available
+     * 
+     * @since 1.0.0
+     * @return bool True if featured image generation is available
+     */
+    public static function is_featured_images_available() {
+        return self::is_pro_active();
+    }
+    
+    /**
+     * Check if SEO features are available
+     * 
+     * @since 1.0.0
+     * @return bool True if SEO features are available
+     */
+    public static function is_seo_features_available() {
+        return self::is_pro_active();
+    }
+    
+    /**
+     * Get plugin performance statistics
+     * 
+     * Provides insight into plugin performance and memory usage
+     * for debugging and optimization purposes.
+     * 
+     * @since 1.1.0
+     * @return array Performance statistics
+     */
+    public function get_performance_stats() {
+        $stats = array(
+            'memory_usage' => memory_get_usage(true),
+            'memory_peak' => memory_get_peak_usage(true),
+            'memory_limit' => ini_get('memory_limit'),
+            'activation_time' => $this->activation_time,
+            'version' => AANP_VERSION
+        );
+        
+        if ($this->error_handler) {
+            $stats['error_stats'] = $this->error_handler->get_error_statistics();
+        }
+        
+        return $stats;
+    }
+    
+    /**
+     * Clear plugin data and cache
+     * 
+     * Utility method for complete plugin cleanup when needed.
+     * 
+     * @since 1.1.0
+     * @return bool Success status
+     */
+    public function clear_plugin_data() {
+        try {
+            // Clear all plugin-related transients
+            global $wpdb;
+            $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_aanp_%' OR option_name LIKE '_transient_timeout_aanp_%'");
+            
+            // Clear object cache
+            if (function_exists('wp_cache_flush')) {
+                wp_cache_flush();
+            }
+            
+            if ($this->error_handler) {
+                $this->error_handler->log_info('Plugin data cleared');
+            }
+            
+            return true;
+            
+        } catch (Exception $e) {
+            if ($this->error_handler) {
+                $this->error_handler->log_error('Failed to clear plugin data', array(
+                    'error' => $e->getMessage()
+                ));
+            }
+            return false;
+        }
+    }
+}

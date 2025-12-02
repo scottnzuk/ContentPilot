@@ -1,24 +1,28 @@
-=== AI Auto News Poster ===
-Contributors: arunrajiah
-Tags: ai, news, auto-posting, content generation, rss, openai, anthropic
+=== ContentPilot - AI-Powered Content Generation for WordPress ===
+Contributors: scottnzuk
+Tags: ai, news, auto-posting, content generation, rss, openai, anthropic, seo, eeat, humanization, analytics
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.6
+Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Auto-generate unique blog posts from the latest news using AI. Free users can generate up to 5 posts manually per batch.
+ContentPilot is an enterprise-grade AI content generation and SEO optimization WordPress plugin with offline AI content humanization, microservices architecture, and advanced analytics.
 
 == Description ==
 
-AI Auto News Poster is a powerful WordPress plugin that automatically transforms the latest news articles into unique, engaging blog posts using advanced AI technology. Perfect for news websites, blogs, and content creators who want to stay current with trending topics.
+ContentPilot is an enterprise-grade WordPress plugin that automatically transforms the latest news articles into unique, engaging blog posts using advanced AI technology. Features microservices architecture, offline AI content humanization, Google EEAT compliance, and advanced SEO optimization.
 
-**Key Features:**
+**Key Features (All Free):**
 
-* **AI-Powered Content Generation**: Uses OpenAI, Anthropic, or custom APIs to create unique blog posts
+* **Enterprise AI Content Generation**: Uses OpenAI, Anthropic, or custom APIs with microservices architecture
+* **Offline AI Content Humanization**: Make AI content appear more human-written using the humano Python package
 * **RSS Feed Integration**: Fetches latest news from popular sources or custom RSS feeds
-* **Manual Batch Generation**: Generate up to 5 unique posts with one click (free version)
+* **Large Batch Generation**: Generate up to 30 unique posts per batch (no restrictions)
+* **Google EEAT Optimization**: Built-in compliance for better search rankings
+* **RankMath SEO Integration**: Advanced SEO analysis and automatic optimization
+* **Real-time Analytics**: Performance monitoring and advanced analytics dashboard
 * **Customizable Settings**: Choose tone, word count, and post categories
 * **Draft Posts**: All generated content is saved as drafts for review before publishing
 * **Source Attribution**: Proper attribution to original news sources
@@ -29,31 +33,34 @@ AI Auto News Poster is a powerful WordPress plugin that automatically transforms
 1. Configure your AI provider (OpenAI, Anthropic, or Custom API)
 2. Add RSS feeds from your favorite news sources
 3. Select categories and content preferences
-4. Click "Generate 5 Posts" to create unique blog content
+4. Click "Generate 30 Posts" to create unique blog content
 5. Review and publish the generated drafts
 
-**Free Version Includes:**
-* Manual generation of up to 5 posts per batch
+**All Features Are Free:**
+* Manual generation of up to 30 posts per batch
+* Automated scheduling with WP-Cron
+* Offline AI content humanization
 * Support for OpenAI and Anthropic APIs
 * Custom RSS feed management
-* Basic content customization
+* Advanced content customization
+* Google EEAT compliance optimization
+* RankMath SEO integration
+* Real-time analytics dashboard
 * Source attribution
-
-**Pro Features (Coming Soon):**
-* Automated scheduling with WP-Cron
-* Generate up to 30 posts per batch
-* Automatic featured image generation
-* SEO meta tags auto-fill
-* Priority support
+* Enterprise-grade security features
+* Microservices architecture
+* Performance monitoring
+* Featured image generation
+* SEO meta tags automation
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/ai-auto-news-poster` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/contentpilot` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Go to Settings > AI Auto News Poster to configure the plugin
+3. Go to Settings > ContentPilot to configure the plugin
 4. Add your AI API key and configure your preferences
 5. Add RSS feeds for news sources
-6. Click "Generate 5 Posts" to start creating content
+6. Click "Generate 30 Posts" to start creating content
 
 == Frequently Asked Questions ==
 
@@ -79,7 +86,7 @@ No, all generated posts are saved as drafts. You can review and edit them before
 
 = How many posts can I generate? =
 
-The free version allows up to 5 posts per batch. Pro version (coming soon) will support up to 30 posts per batch.
+The enhanced version allows up to 30 posts per batch with no restrictions. All features are now free!
 
 = Is the plugin secure? =
 
@@ -95,6 +102,14 @@ Yes, the plugin follows WordPress security best practices including input saniti
 
 == Changelog ==
 
+= 2.0.0 =
+🎉 **COMPLETE REBRANDING**: Transformed from AI Auto News Poster to ContentPilot
+✅ Updated all branding, documentation, and user-facing text
+✅ Enhanced plugin description with professional ContentPilot messaging
+✅ Improved README with compelling marketing content
+✅ Updated all documentation files with modern ContentPilot identity
+✅ Verified all user-facing text reflects ContentPilot branding
+
 = 1.0.0 =
 * Initial release
 * AI-powered content generation with OpenAI and Anthropic support
@@ -107,19 +122,19 @@ Yes, the plugin follows WordPress security best practices including input saniti
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release of AI Auto News Poster. Configure your AI provider and start generating unique blog posts from the latest news!
+= 2.0.0 =
+🎉 **COMPLETE REBRANDING**: Enterprise-grade plugin with microservices architecture, offline AI humanization, Google EEAT compliance, and advanced SEO optimization. All features now under the ContentPilot brand!
 
 == Support ==
 
 For support, feature requests, or bug reports:
-* GitHub Issues: https://github.com/arunrajiah/ai-auto-news-poster/issues
+* GitHub Issues: https://github.com/scottnzuk/contentpilot-enhanced/issues
 * Email: Contact via GitHub profile
-* Documentation: https://github.com/arunrajiah/ai-auto-news-poster/wiki
+* Documentation: https://github.com/scottnzuk/contentpilot-enhanced/wiki
 
 == Privacy Policy ==
 
-This plugin sends article headlines and summaries to your configured AI provider (OpenAI, Anthropic, or custom API) for content generation. Please review your AI provider's privacy policy and terms of service. 
+This plugin sends article headlines and summaries to your configured AI provider (OpenAI, Anthropic, or custom API) for content generation. Please review your AI provider's privacy policy and terms of service.
 
 **Data Handling:**
 * API keys are encrypted and stored securely in WordPress options
@@ -144,9 +159,9 @@ This plugin integrates with external services:
 
 == Credits ==
 
-Developed by Arun Rajiah
-* GitHub: https://github.com/arunrajiah
-* Plugin Repository: https://github.com/arunrajiah/ai-auto-news-poster
+Developed by scottnzuk
+* GitHub: https://github.com/scottnzuk
+* Plugin Repository: https://github.com/scottnzuk/contentpilot-enhanced
 
 **Technologies Used:**
 * WordPress HTTP API for RSS feed fetching

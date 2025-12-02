@@ -183,22 +183,21 @@
     vertical-align: middle;
 }
 
-.aanp-pro-features {
-    background: #f9f9f9;
+.aanp-core-features {
+    background: #e7f3ff;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #0073aa;
     border-radius: 4px;
     margin: 20px 0;
-    opacity: 0.6;
     position: relative;
 }
 
-.aanp-pro-features::before {
-    content: "🔒 PRO";
+.aanp-core-features::before {
+    content: "✨ CORE";
     position: absolute;
     top: 10px;
     right: 15px;
-    background: #ff6900;
+    background: #00a32a;
     color: white;
     padding: 5px 10px;
     border-radius: 3px;
@@ -207,9 +206,9 @@
     z-index: 1;
 }
 
-.aanp-pro-features input,
-.aanp-pro-features select {
-    cursor: not-allowed;
+.aanp-core-features input,
+.aanp-core-features select {
+    cursor: pointer;
 }
 
 .dashicons.spin {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="default"
+         beStrictAboutOutputDuringTests="true"
+         failOnRisky="true"
+         failOnWarning="true">
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="display_errors" value="1"/>
+        <ini name="display_startup_errors" value="1"/>
+        <ini name="log_errors" value="1"/>
+        <ini name="log_errors_max_len" value="0"/>
+        <ini name="ignore_repeated_errors" value="0"/>
+        <ini name="ignore_repeated_source" value="0"/>
+        <ini name="track_errors" value="1"/>
+        <ini name="html_errors" value="0"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="Microservices Test Suite">
+            <directory>./microservices</directory>
+        </testsuite>
+        <testsuite name="RSS Feed System Test Suite">
+            <directory>./rss</directory>
+        </testsuite>
+        <testsuite name="Core Services Test Suite">
+            <directory>./core</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

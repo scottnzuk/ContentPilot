@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Auto News Poster - Dashboard</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Real-time monitoring dashboard for AI Auto News Poster with performance analytics and SEO insights.">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007cba">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Dashboard Container -->
+        <div class="dashboard-container">
+            <!-- Header Navigation -->
+            <header class="dashboard-header">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <i class="fas fa-newspaper"></i>
+                        <h1>AI Auto News Poster</h1>
+                        <span class="version-badge">v2.0</span>
+                    </div>
+                    <div class="header-actions">
+                        <div class="connection-status">
+                            <span class="status-indicator online" id="connection-status"></span>
+                            <span class="status-text">Connected</span>
+                        </div>
+                        <div class="notifications-dropdown">
+                            <button class="notification-btn" id="notifications-btn">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-count" id="notification-count">0</span>
+                            </button>
+                            <div class="notification-panel" id="notification-panel"></div>
+                        </div>
+                        <div class="user-menu">
+                            <button class="user-btn">
+                                <i class="fas fa-user-circle"></i>
+                                <span>Admin</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Dashboard Content -->
+            <main class="dashboard-main">
+                <!-- Sidebar Navigation -->
+                <nav class="dashboard-sidebar">
+                    <ul class="sidebar-menu">
+                        <li class="menu-item active">
+                            <a href="#overview" data-section="overview">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Overview</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#performance" data-section="performance">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Performance</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#content" data-section="content">
+                                <i class="fas fa-edit"></i>
+                                <span>Content</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#seo" data-section="seo">
+                                <i class="fas fa-search"></i>
+                                <span>SEO & EEAT</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#api" data-section="api">
+                                <i class="fas fa-code"></i>
+                                <span>API Platform</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#settings" data-section="settings">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Content Area -->
+                <div class="dashboard-content">
+                    <!-- Overview Section -->
+                    <section id="overview-section" class="content-section active">
+                        <div class="section-header">
+                            <h2>Dashboard Overview</h2>
+                            <div class="header-controls">
+                                <button class="btn btn-outline" id="refresh-data">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                                <div class="time-range-selector">
+                                    <select id="time-range">
+                                        <option value="1h">Last Hour</option>
+                                        <option value="24h">Last 24 Hours</option>
+                                        <option value="7d" selected>Last 7 Days</option>
+                                        <option value="30d">Last 30 Days</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Metrics Cards -->
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-newspaper"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>Articles Published</h3>
+                                    <div class="metric-value" id="articles-published">0</div>
+                                    <div class="metric-change positive" id="articles-change">+0%</div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>Total Views</h3>
+                                    <div class="metric-value" id="total-views">0</div>
+                                    <div class="metric-change positive" id="views-change">+0%</div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>Performance Score</h3>
+                                    <div class="metric-value" id="performance-score">0</div>
+                                    <div class="metric-change positive" id="score-change">+0%</div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3>SEO Health</h3>
+                                    <div class="metric-value" id="seo-health">0</div>
+                                    <div class="metric-status" id="seo-status">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <div class="chart-header">
+                                    <h3>Content Performance Trends</h3>
+                                    <div class="chart-controls">
+                                        <button class="chart-btn active" data-chart="views">Views</button>
+                                        <button class="chart-btn" data-chart="engagement">Engagement</button>
+                                        <button class="chart-btn" data-chart="seo">SEO Score</button>
+                                    </div>
+                                </div>
+                                <div class="chart-content">
+                                    <canvas id="performance-chart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header">
+                                    <h3>Real-time Activity</h3>
+                                </div>
+                                <div class="chart-content">
+                                    <canvas id="activity-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="activity-section">
+                            <h3>Recent Activity</h3>
+                            <div class="activity-list" id="activity-list">
+                                <!-- Activities will be populated dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Performance Section -->
+                    <section id="performance-section" class="content-section">
+                        <div class="section-header">
+                            <h2>Performance Monitoring</h2>
+                            <div class="header-controls">
+                                <button class="btn btn-primary" id="start-monitoring">
+                                    <i class="fas fa-play"></i> Start Monitoring
+                                </button>
+                                <button class="btn btn-outline" id="export-report">
+                                    <i class="fas fa-download"></i> Export Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="performance-metrics">
+                            <div class="metric-row">
+                                <div class="performance-card">
+                                    <h4>Response Time</h4>
+                                    <div class="performance-value" id="response-time">0ms</div>
+                                    <div class="performance-chart">
+                                        <canvas id="response-time-chart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="performance-card">
+                                    <h4>Memory Usage</h4>
+                                    <div class="performance-value" id="memory-usage">0MB</div>
+                                    <div class="performance-chart">
+                                        <canvas id="memory-usage-chart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="performance-card">
+                                    <h4>CPU Usage</h4>
+                                    <div class="performance-value" id="cpu-usage">0%</div>
+                                    <div class="performance-chart">
+                                        <canvas id="cpu-usage-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Alerts -->
+                        <div class="alerts-section">
+                            <h3>Performance Alerts</h3>
+                            <div class="alerts-list" id="performance-alerts">
+                                <!-- Alerts will be populated dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SEO Section -->
+                    <section id="seo-section" class="content-section">
+                        <div class="section-header">
+                            <h2>SEO & EEAT Analytics</h2>
+                            <div class="header-controls">
+                                <button class="btn btn-primary" id="run-seo-audit">
+                                    <i class="fas fa-search"></i> Run SEO Audit
+                                </button>
+                                <button class="btn btn-outline" id="optimize-content">
+                                    <i class="fas fa-magic"></i> Optimize Content
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SEO Score Overview -->
+                        <div class="seo-overview">
+                            <div class="seo-score-card">
+                                <div class="score-circle" id="overall-seo-score">
+                                    <div class="score-inner">
+                                        <div class="score-value">0</div>
+                                        <div class="score-label">Overall</div>
+                                    </div>
+                                </div>
+                                <div class="score-breakdown">
+                                    <div class="score-item">
+                                        <span class="score-label">Content Quality</span>
+                                        <span class="score-value" id="content-quality-score">0</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">EEAT Compliance</span>
+                                        <span class="score-value" id="eeat-score">0</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">Technical SEO</span>
+                                        <span class="score-value" id="technical-seo-score">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Recommendations -->
+                        <div class="seo-recommendations">
+                            <h3>Optimization Recommendations</h3>
+                            <div class="recommendations-list" id="seo-recommendations">
+                                <!-- Recommendations will be populated dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- API Platform Section -->
+                    <section id="api-section" class="content-section">
+                        <div class="section-header">
+                            <h2>API Platform & Integrations</h2>
+                            <div class="header-controls">
+                                <button class="btn btn-primary" id="generate-api-key">
+                                    <i class="fas fa-key"></i> Generate API Key
+                                </button>
+                                <button class="btn btn-outline" id="view-docs">
+                                    <i class="fas fa-book"></i> API Documentation
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- API Endpoints -->
+                        <div class="api-endpoints">
+                            <h3>Available Endpoints</h3>
+                            <div class="endpoints-grid">
+                                <div class="endpoint-card">
+                                    <h4>REST API</h4>
+                                    <p>Complete REST API for content management</p>
+                                    <div class="endpoint-url">/wp-json/ai-auto-news/v1/</div>
+                                    <div class="endpoint-status active">Active</div>
+                                </div>
+                                <div class="endpoint-card">
+                                    <h4>GraphQL API</h4>
+                                    <p>GraphQL endpoint for complex queries</p>
+                                    <div class="endpoint-url">/wp-json/ai-auto-news/graphql</div>
+                                    <div class="endpoint-status active">Active</div>
+                                </div>
+                                <div class="endpoint-card">
+                                    <h4>Webhooks</h4>
+                                    <p>Real-time event notifications</p>
+                                    <div class="endpoint-url">Configured via Dashboard</div>
+                                    <div class="endpoint-status active">Active</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- API Usage Analytics -->
+                        <div class="api-analytics">
+                            <h3>API Usage Analytics</h3>
+                            <div class="analytics-grid">
+                                <div class="analytics-card">
+                                    <h4>Total Requests</h4>
+                                    <div class="analytics-value" id="total-requests">0</div>
+                                </div>
+                                <div class="analytics-card">
+                                    <h4>Rate Limit</h4>
+                                    <div class="analytics-value" id="rate-limit">1000/hour</div>
+                                </div>
+                                <div class="analytics-card">
+                                    <h4>Success Rate</h4>
+                                    <div class="analytics-value" id="success-rate">100%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Settings Section -->
+                    <section id="settings-section" class="content-section">
+                        <div class="section-header">
+                            <h2>Dashboard Settings</h2>
+                            <button class="btn btn-primary" id="save-settings">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </div>
+
+                        <!-- Settings Panels -->
+                        <div class="settings-container">
+                            <div class="settings-panel">
+                                <h3>Real-time Monitoring</h3>
+                                <div class="setting-item">
+                                    <label for="monitoring-interval">Update Interval (seconds)</label>
+                                    <input type="number" id="monitoring-interval" value="5" min="1" max="60">
+                                </div>
+                                <div class="setting-item">
+                                    <label for="enable-alerts">Enable Alerts</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="enable-alerts" checked>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-panel">
+                                <h3>Dashboard Preferences</h3>
+                                <div class="setting-item">
+                                    <label for="theme-select">Theme</label>
+                                    <select id="theme-select">
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
+                                        <option value="auto">Auto</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label for="chart-animations">Chart Animations</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="chart-animations" checked>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/websocket.js"></script>
+    <script src="assets/js/components.js"></script>
+</body>
+</html>

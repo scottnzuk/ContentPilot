@@ -1,0 +1,177 @@
+{
+  "name": "AI Auto News Poster Dashboard",
+  "short_name": "AI News Dashboard",
+  "description": "Enterprise-grade AI content generation and SEO optimization WordPress plugin dashboard with real-time monitoring and analytics.",
+  "version": "2.0.0",
+  "start_url": "/wp-admin/admin.php?page=ai-news-dashboard",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#007cba",
+  "background_color": "#1a1a1a",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["productivity", "business", "utilities"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/desktop-dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard Overview"
+    },
+    {
+      "src": "assets/screenshots/mobile-dashboard.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile Dashboard View"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard Overview",
+      "short_name": "Overview",
+      "description": "View dashboard overview and key metrics",
+      "url": "/wp-admin/admin.php?page=ai-news-dashboard&tab=overview",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-overview.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Performance Monitor",
+      "short_name": "Performance",
+      "description": "Monitor real-time performance metrics",
+      "url": "/wp-admin/admin.php?page=ai-news-dashboard&tab=performance",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-performance.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Content Manager",
+      "short_name": "Content",
+      "description": "Manage AI-generated content",
+      "url": "/wp-admin/admin.php?page=ai-news-dashboard&tab=content",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-content.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "SEO Analytics",
+      "short_name": "SEO",
+      "description": "View SEO analytics and recommendations",
+      "url": "/wp-admin/admin.php?page=ai-news-dashboard&tab=seo",
+      "icons": [
+        {
+          "src": "assets/icons/shortcut-seo.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "features": [
+    "Cross Platform",
+    "Fast",
+    "Simple"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "file_handlers": [
+    {
+      "action": "/wp-admin/admin.php?page=ai-news-dashboard&handler=import",
+      "accept": {
+        "text/csv": [".csv"],
+        "application/json": [".json"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+aanp",
+      "url": "/wp-admin/admin.php?page=ai-news-dashboard&action=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/wp-admin/admin.php?page=ai-news-dashboard&share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*", "text/*", "application/pdf"]
+        }
+      ]
+    }
+  },
+  "handle_links": "preferred",
+  "capture_links": "existing-client-navigate"
+}

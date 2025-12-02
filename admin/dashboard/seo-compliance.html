@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO & EEAT Compliance Dashboard</title>
+    <link rel="stylesheet" href="assets/css/seo-compliance.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Comprehensive SEO and EEAT compliance monitoring dashboard for AI Auto News Poster.">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007cba">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Dashboard Container -->
+        <div class="compliance-dashboard">
+            <!-- Header Navigation -->
+            <header class="dashboard-header">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <i class="fas fa-search"></i>
+                        <h1>SEO & EEAT Compliance</h1>
+                        <span class="compliance-badge" id="compliance-status">
+                            <i class="fas fa-check-circle"></i> Compliance Check
+                        </span>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="run-full-audit">
+                            <i class="fas fa-magic"></i> Run Full Audit
+                        </button>
+                        <button class="btn btn-outline" id="export-report">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                        <div class="last-updated">
+                            <span>Last Updated: <span id="last-updated-time">Just now</span></span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Dashboard Content -->
+            <main class="dashboard-main">
+                <!-- Compliance Overview -->
+                <section class="compliance-overview">
+                    <div class="overview-header">
+                        <h2>Compliance Overview</h2>
+                        <div class="score-circle-container">
+                            <div class="score-circle" id="overall-score">
+                                <div class="score-inner">
+                                    <div class="score-value">0</div>
+                                    <div class="score-label">Overall</div>
+                                </div>
+                            </div>
+                            <div class="score-details">
+                                <div class="score-breakdown">
+                                    <div class="score-item">
+                                        <span class="score-category">SEO Score</span>
+                                        <span class="score-value" id="seo-score">0</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-category">EEAT Score</span>
+                                        <span class="score-value" id="eeat-score">0</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-category">Technical Score</span>
+                                        <span class="score-value" id="technical-score">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Metrics Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card seo-metric">
+                            <div class="metric-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>SEO Optimization</h3>
+                                <div class="metric-value" id="seo-optimization-score">0%</div>
+                                <div class="metric-status" id="seo-status">
+                                    <i class="fas fa-info-circle"></i> Analyzing...
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-item">
+                                        <span>Meta Descriptions:</span>
+                                        <span id="meta-desc-count">0/0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Title Tags:</span>
+                                        <span id="title-tags-count">0/0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Image Alt Tags:</span>
+                                        <span id="alt-tags-count">0/0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card eeat-metric">
+                            <div class="metric-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>EEAT Compliance</h3>
+                                <div class="metric-value" id="eeat-compliance-score">0%</div>
+                                <div class="metric-status" id="eeat-status">
+                                    <i class="fas fa-info-circle"></i> Analyzing...
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-item">
+                                        <span>Expertise:</span>
+                                        <span id="expertise-score">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Authoritativeness:</span>
+                                        <span id="authoritativeness-score">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Trustworthiness:</span>
+                                        <span id="trustworthiness-score">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card content-metric">
+                            <div class="metric-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Content Quality</h3>
+                                <div class="metric-value" id="content-quality-score">0%</div>
+                                <div class="metric-status" id="content-status">
+                                    <i class="fas fa-info-circle"></i> Analyzing...
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-item">
+                                        <span>Readability:</span>
+                                        <span id="readability-score">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Originality:</span>
+                                        <span id="originality-score">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Engagement:</span>
+                                        <span id="engagement-score">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card technical-metric">
+                            <div class="metric-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Technical Health</h3>
+                                <div class="metric-value" id="technical-health-score">0%</div>
+                                <div class="metric-status" id="technical-status">
+                                    <i class="fas fa-info-circle"></i> Analyzing...
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-item">
+                                        <span>Core Web Vitals:</span>
+                                        <span id="core-web-vitals-score">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Mobile Friendly:</span>
+                                        <span id="mobile-score">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span>Security:</span>
+                                        <span id="security-score">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Detailed Analysis Sections -->
+                <div class="analysis-sections">
+                    <!-- SEO Analysis Section -->
+                    <section class="analysis-section" id="seo-analysis">
+                        <div class="section-header">
+                            <h3><i class="fas fa-search"></i> SEO Analysis</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline" id="optimize-seo">
+                                    <i class="fas fa-magic"></i> Auto Optimize
+                                </button>
+                                <button class="btn btn-sm btn-outline" id="view-seo-report">
+                                    <i class="fas fa-chart-bar"></i> Detailed Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SEO Issues and Opportunities -->
+                        <div class="issues-grid">
+                            <div class="issue-card critical">
+                                <div class="issue-header">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <h4>Critical Issues</h4>
+                                    <span class="issue-count" id="critical-issues-count">0</span>
+                                </div>
+                                <div class="issue-list" id="critical-issues-list">
+                                    <!-- Critical issues will be populated here -->
+                                </div>
+                            </div>
+
+                            <div class="issue-card warning">
+                                <div class="issue-header">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <h4>Warnings</h4>
+                                    <span class="issue-count" id="warnings-count">0</span>
+                                </div>
+                                <div class="issue-list" id="warnings-list">
+                                    <!-- Warning issues will be populated here -->
+                                </div>
+                            </div>
+
+                            <div class="issue-card opportunities">
+                                <div class="issue-header">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <h4>Opportunities</h4>
+                                    <span class="issue-count" id="opportunities-count">0</span>
+                                </div>
+                                <div class="issue-list" id="opportunities-list">
+                                    <!-- Optimization opportunities will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Performance Chart -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h4>SEO Performance Trends</h4>
+                                <div class="chart-controls">
+                                    <select id="seo-trend-period">
+                                        <option value="7d">Last 7 Days</option>
+                                        <option value="30d" selected>Last 30 Days</option>
+                                        <option value="90d">Last 90 Days</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-content">
+                                <canvas id="seo-performance-chart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- EEAT Analysis Section -->
+                    <section class="analysis-section" id="eeat-analysis">
+                        <div class="section-header">
+                            <h3><i class="fas fa-user-graduate"></i> EEAT Compliance Analysis</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline" id="improve-eeat">
+                                    <i class="fas fa-arrow-up"></i> Improve EEAT
+                                </button>
+                                <button class="btn btn-sm btn-outline" id="view-eeat-guide">
+                                    <i class="fas fa-book"></i> EEAT Guide
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- EEAT Breakdown -->
+                        <div class="eeat-breakdown">
+                            <div class="eeat-pillar">
+                                <div class="pillar-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="pillar-content">
+                                    <h4>Expertise</h4>
+                                    <div class="pillar-score" id="expertise-pillar-score">0%</div>
+                                    <div class="pillar-description">
+                                        Demonstrates deep knowledge and subject matter expertise
+                                    </div>
+                                    <div class="pillar-metrics">
+                                        <div class="pillar-metric">
+                                            <span>Content Depth</span>
+                                            <span id="content-depth-metric">0%</span>
+                                        </div>
+                                        <div class="pillar-metric">
+                                            <span>Topic Authority</span>
+                                            <span id="topic-authority-metric">0%</span>
+                                        </div>
+                                        <div class="pillar-metric">
+                                            <span>Technical Knowledge</span>
+                                            <span id="technical-knowledge-metric">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="eeat-pillar">
+                                <div class="pillar-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="pillar-content">
+                                    <h4>Authoritativeness</h4>
+                                    <div class="pillar-score" id="authoritativeness-pillar-score">0%</div>
+                                    <div class="pillar-description">
+                                        Establishes credibility and recognition in the field
+                                    </div>
+                                    <div class="pillar-metrics">
+                                        <div class="pillar-metric">
+                                            <span>Domain Authority</span>
+                                            <span id="domain-authority-metric">0%</span>
+                                        </div>
+                                        <div class="pillar-metric">
+                                            <span>Backlink Profile</span>
+                                            <span id="backlink-profile-metric">0%</span>
+                                        </div>
+                                        <div class="pillar-metric">
+                                            <span>Social Proof</span>
+                                            <span id="social-proof-metric">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="eeat-pillar">
+                                <div class="pillar-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="pillar-content">
+                                    <h4>Trustworthiness</h4>
+                                    <div class="pillar-score" id="trustworthiness-pillar-score">0%</div>
+                                    <div class="pillar-description">
+                                        Maintains high standards of accuracy and reliability
+                                    </div>
+                                    <div class="pillar-metrics">
+                                        <div class="pillar-metric">
+                                            <span>Content Accuracy</span>
+                                            <span id="content-accuracy-metric">0%</span>
+                                        </div>
+                                        <div class="pillar-metric">
+                                            <span>Sources & Citations</span>
+                                            <span id="sources-citations-metric">0%</span>
+                                        </div>
+                                        <div class="pillar-metric">
+                                            <span>Transparency</span>
+                                            <span id="transparency-metric">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EEAT Recommendations -->
+                        <div class="recommendations-container">
+                            <h4>EEAT Improvement Recommendations</h4>
+                            <div class="recommendations-list" id="eeat-recommendations">
+                                <!-- EEAT recommendations will be populated here -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Content Analysis Section -->
+                    <section class="analysis-section" id="content-analysis">
+                        <div class="section-header">
+                            <h3><i class="fas fa-file-alt"></i> Content Quality Analysis</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline" id="optimize-content">
+                                    <i class="fas fa-magic"></i> Optimize Content
+                                </button>
+                                <button class="btn btn-sm btn-outline" id="content-editor">
+                                    <i class="fas fa-edit"></i> Content Editor
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Content Quality Metrics -->
+                        <div class="content-metrics">
+                            <div class="content-metric">
+                                <div class="metric-header">
+                                    <h4>Readability Score</h4>
+                                    <span class="metric-value" id="readability-value">0%</span>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-row">
+                                        <span>Average Reading Grade:</span>
+                                        <span id="reading-grade">0</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>Sentence Length:</span>
+                                        <span id="avg-sentence-length">0 words</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>Paragraph Length:</span>
+                                        <span id="avg-paragraph-length">0 sentences</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="content-metric">
+                                <div class="metric-header">
+                                    <h4>Keyword Optimization</h4>
+                                    <span class="metric-value" id="keyword-optimization-value">0%</span>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-row">
+                                        <span>Primary Keywords:</span>
+                                        <span id="primary-keywords-count">0</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>Keyword Density:</span>
+                                        <span id="keyword-density">0%</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>Long-tail Keywords:</span>
+                                        <span id="longtail-keywords-count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="content-metric">
+                                <div class="metric-header">
+                                    <h4>Engagement Factors</h4>
+                                    <span class="metric-value" id="engagement-value">0%</span>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="detail-row">
+                                        <span>CTA Presence:</span>
+                                        <span id="cta-presence">0</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>Internal Links:</span>
+                                        <span id="internal-links-count">0</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>External Links:</span>
+                                        <span id="external-links-count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Performance -->
+                        <div class="content-performance">
+                            <h4>Content Performance</h4>
+                            <div class="performance-grid">
+                                <div class="performance-item">
+                                    <span class="performance-label">Average Time on Page</span>
+                                    <span class="performance-value" id="avg-time-on-page">0:00</span>
+                                </div>
+                                <div class="performance-item">
+                                    <span class="performance-label">Bounce Rate</span>
+                                    <span class="performance-value" id="bounce-rate">0%</span>
+                                </div>
+                                <div class="performance-item">
+                                    <span class="performance-label">Social Shares</span>
+                                    <span class="performance-value" id="social-shares">0</span>
+                                </div>
+                                <div class="performance-item">
+                                    <span class="performance-label">Comments</span>
+                                    <span class="performance-value" id="comments-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Technical Analysis Section -->
+                    <section class="analysis-section" id="technical-analysis">
+                        <div class="section-header">
+                            <h3><i class="fas fa-cog"></i> Technical SEO Analysis</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-sm btn-outline" id="fix-technical-issues">
+                                    <i class="fas fa-wrench"></i> Fix Issues
+                                </button>
+                                <button class="btn btn-sm btn-outline" id="run-technical-audit">
+                                    <i class="fas fa-search"></i> Full Technical Audit
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Core Web Vitals -->
+                        <div class="core-web-vitals">
+                            <h4>Core Web Vitals</h4>
+                            <div class="vitals-grid">
+                                <div class="vital-metric" id="lcp-metric">
+                                    <div class="vital-icon">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                    </div>
+                                    <div class="vital-content">
+                                        <h5>Largest Contentful Paint</h5>
+                                        <div class="vital-score" id="lcp-score">0ms</div>
+                                        <div class="vital-status" id="lcp-status">Not measured</div>
+                                    </div>
+                                </div>
+
+                                <div class="vital-metric" id="fid-metric">
+                                    <div class="vital-icon">
+                                        <i class="fas fa-hand-pointer"></i>
+                                    </div>
+                                    <div class="vital-content">
+                                        <h5>First Input Delay</h5>
+                                        <div class="vital-score" id="fid-score">0ms</div>
+                                        <div class="vital-status" id="fid-status">Not measured</div>
+                                    </div>
+                                </div>
+
+                                <div class="vital-metric" id="cls-metric">
+                                    <div class="vital-icon">
+                                        <i class="fas fa-arrows-alt"></i>
+                                    </div>
+                                    <div class="vital-content">
+                                        <h5>Cumulative Layout Shift</h5>
+                                        <div class="vital-score" id="cls-score">0</div>
+                                        <div class="vital-status" id="cls-status">Not measured</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Technical Issues -->
+                        <div class="technical-issues">
+                            <div class="issues-by-category">
+                                <div class="issue-category">
+                                    <h5>Performance Issues</h5>
+                                    <div class="issue-list" id="performance-issues-list">
+                                        <!-- Performance issues will be populated here -->
+                                    </div>
+                                </div>
+
+                                <div class="issue-category">
+                                    <h5>Mobile Issues</h5>
+                                    <div class="issue-list" id="mobile-issues-list">
+                                        <!-- Mobile issues will be populated here -->
+                                    </div>
+                                </div>
+
+                                <div class="issue-category">
+                                    <h5>Security Issues</h5>
+                                    <div class="issue-list" id="security-issues-list">
+                                        <!-- Security issues will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Action Panel -->
+                <div class="action-panel">
+                    <h3>Quick Actions</h3>
+                    <div class="action-grid">
+                        <button class="action-button" id="bulk-optimize">
+                            <i class="fas fa-magic"></i>
+                            <span>Bulk Optimize Content</span>
+                        </button>
+                        <button class="action-button" id="schedule-audit">
+                            <i class="fas fa-calendar"></i>
+                            <span>Schedule Audit</span>
+                        </button>
+                        <button class="action-button" id="competitor-analysis">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Competitor Analysis</span>
+                        </button>
+                        <button class="action-button" id="keyword-research">
+                            <i class="fas fa-search"></i>
+                            <span>Keyword Research</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Analyzing SEO & EEAT compliance...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="assets/js/seo-compliance.js"></script>
+</body>
+</html>

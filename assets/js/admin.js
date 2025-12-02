@@ -53,37 +53,74 @@ jQuery(document).ready(function($) {
                 clearInterval(progressInterval);
                 progressBar.css('width', '100%');
                 
-                if (response.success) {
-                    statusText.html('<span style="color: #00a32a;">✓ ' + response.data.message + '</span>');
+                // Validate response structure
+                if (response && typeof response === 'object' && response.success === true) {
+                    // Safely extract and validate message
+                    var message = response.data && typeof response.data.message === 'string' ?
+                                 escapeHtml(response.data.message) : 'Posts generated successfully';
                     
-                    // Display generated posts
-                    if (response.data.posts && response.data.posts.length > 0) {
+                    statusText.html('<span style="color: #00a32a;">✓ ' + message + '</span>');
+                    
+                    // Display generated posts with security validation
+                    if (response.data && response.data.posts && Array.isArray(response.data.posts) && response.data.posts.length > 0) {
                         var postsHtml = '<ul>';
                         $.each(response.data.posts, function(index, post) {
-                            postsHtml += '<li>';
-                            postsHtml += '<strong>' + escapeHtml(post.title) + '</strong> ';
-                            postsHtml += '<a href="' + post.edit_link + '" class="button button-small" target="_blank">Edit Post</a>';
-                            postsHtml += '</li>';
+                            // Validate post object structure
+                            if (post && typeof post === 'object' &&
+                                typeof post.title === 'string' &&
+                                typeof post.edit_link === 'string') {
+                                
+                                postsHtml += '<li>';
+                                // Escape title for HTML context
+                                postsHtml += '<strong>' + escapeHtml(post.title) + '</strong> ';
+                                
+                                // Validate and safely escape URL for href context
+                                if (isValidUrl(post.edit_link) && isSafeUrl(post.edit_link)) {
+                                    var safeUrl = escapeUrl(post.edit_link);
+                                    postsHtml += '<a href="' + safeUrl + '" class="button button-small" target="_blank" rel="noopener noreferrer">Edit Post</a>';
+                                } else {
+                                    postsHtml += '<span class="button button-small disabled" style="opacity: 0.6; cursor: not-allowed;">Invalid URL</span>';
+                                }
+                                postsHtml += '</li>';
+                            }
                         });
                         postsHtml += '</ul>';
                         resultsList.html(postsHtml);
                         resultsDiv.show();
                     }
                     
-                    // Show admin notice
-                    showAdminNotice(response.data.message, 'success');
+                    // Show admin notice with sanitized message
+                    showAdminNotice(message, 'success');
                     
                 } else {
-                    var errorMsg = response.data || aanp_ajax.error_text;
-                    statusText.html('<span style="color: #d63638;">✗ ' + errorMsg + '</span>');
+                    // Handle error response with sanitized message
+                    var errorMsg = 'Operation failed';
+                    if (response && response.data && typeof response.data === 'string') {
+                        errorMsg = response.data;
+                    } else if (typeof response === 'string') {
+                        errorMsg = response;
+                    }
+                    
+                    statusText.html('<span style="color: #d63638;">✗ ' + escapeHtml(errorMsg) + '</span>');
                     showAdminNotice(errorMsg, 'error');
                 }
             },
             error: function(xhr, status, error) {
                 clearInterval(progressInterval);
                 progressBar.css('width', '100%');
-                var errorMsg = 'AJAX Error: ' + error;
-                statusText.html('<span style="color: #d63638;">✗ ' + errorMsg + '</span>');
+                
+                // Secure error handling - don't expose sensitive information
+                var errorMsg = 'Request failed. Please try again.';
+                if (xhr.status === 403) {
+                    errorMsg = 'Access denied. Please refresh the page and try again.';
+                } else if (xhr.status === 500) {
+                    errorMsg = 'Server error occurred. Please contact the administrator.';
+                } else if (xhr.status === 0) {
+                    errorMsg = 'Network error. Please check your connection.';
+                }
+                // Don't log the actual error message to avoid information disclosure
+                
+                statusText.html('<span style="color: #d63638;">✗ ' + escapeHtml(errorMsg) + '</span>');
                 showAdminNotice(errorMsg, 'error');
             },
             complete: function() {
@@ -109,6 +146,36 @@ jQuery(document).ready(function($) {
             "'": '&#039;'
         };
         return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    
+    // URL escaping function for href attributes
+    function escapeUrl(url) {
+        if (typeof url !== 'string') {
+            return '#';
+        }
+        // Encode special characters in URLs for safe href usage
+        return encodeURIComponent(url);
+    }
+    
+    // Additional security check for URLs
+    function isSafeUrl(url) {
+        if (typeof url !== 'string') {
+            return false;
+        }
+        
+        // Check for potential XSS patterns
+        var dangerousPatterns = [
+            /javascript:/i,
+            /vbscript:/i,
+            /onload=/i,
+            /onerror=/i,
+            /<script/i,
+            /data:text\/html/i
+        ];
+        
+        return !dangerousPatterns.some(function(pattern) {
+            return pattern.test(url);
+        });
+    }
     }
     
     // Helper function to show admin notices
@@ -160,11 +227,11 @@ jQuery(document).ready(function($) {
             return false;
         }
         
-        // Validate RSS feeds
+        // Validate RSS feeds with enhanced security
         var hasValidFeed = false;
         $('input[name="aanp_settings[rss_feeds][]"]').each(function() {
             var feedUrl = $(this).val().trim();
-            if (feedUrl && isValidUrl(feedUrl)) {
+            if (feedUrl && isValidUrl(feedUrl) && isSafeUrl(feedUrl)) {
                 hasValidFeed = true;
                 return false; // break loop
             }
@@ -177,15 +244,149 @@ jQuery(document).ready(function($) {
         }
     });
     
-    // URL validation helper
+    // Enhanced URL validation helper with security checks
     function isValidUrl(string) {
+        if (typeof string !== 'string' || string.length === 0) {
+            return false;
+        }
         try {
-            new URL(string);
+            var url = new URL(string);
+            // Ensure protocol is http or https
+            if (!['http:', 'https:'].includes(url.protocol)) {
+                return false;
+            }
             return true;
         } catch (_) {
             return false;
         }
     }
+    
+    // Cache purge functionality
+    $('#aanp-purge-cache').on('click', function() {
+        var button = $(this);
+        
+        if (!confirm('Are you sure you want to purge all cache? This action cannot be undone.')) {
+            return;
+        }
+        
+        button.prop('disabled', true).text('Purging...');
+        
+        $.ajax({
+            url: aanp_ajax.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'aanp_purge_cache',
+                nonce: aanp_ajax.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    showAdminNotice('Cache purged successfully!', 'success');
+                } else {
+                    showAdminNotice('Failed to purge cache.', 'error');
+                }
+            },
+            error: function() {
+                showAdminNotice('Error purging cache. Please try again later.', 'error');
+            },
+            complete: function() {
+                button.prop('disabled', false).text('Purge All Cache');
+            }
+        });
+    });
+    
+    // Humanizer test functionality
+    $('#test-humanizer-btn').on('click', function() {
+        var button = $(this);
+        var inputText = $('#humanizer-test-input').val().trim();
+        var resultsDiv = $('#humanizer-test-results');
+        var originalContent = $('#original-content');
+        var humanizedContent = $('#humanized-content');
+        var statsContent = $('#humanization-stats');
+        
+        if (!inputText) {
+            alert('Please enter some text to test the humanizer.');
+            $('#humanizer-test-input').focus();
+            return;
+        }
+        
+        // Disable button and show loading
+        button.prop('disabled', true).text('Processing...');
+        resultsDiv.hide();
+        
+        // Show original text
+        originalContent.text(inputText);
+        
+        // Make AJAX request
+        $.ajax({
+            url: aanp_ajax.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'aanp_test_humanizer',
+                text: inputText,
+                strength: $('select[name="aanp_settings[humanizer_strength]"]').val() || 'medium',
+                personality: $('input[name="aanp_settings[humanizer_personality]"]').val() || '',
+                nonce: aanp_ajax.settings_nonce
+            },
+            success: function(response) {
+                if (response.success && response.data) {
+                    var data = response.data;
+                    
+                    if (data.success) {
+                        humanizedContent.text(data.humanized_content || data.content || 'No content received');
+                        
+                        // Show metadata if available
+                        var stats = [];
+                        if (data.execution_time_ms) {
+                            stats.push('Processing time: ' + data.execution_time_ms + 'ms');
+                        }
+                        if (data.test_metadata) {
+                            var meta = data.test_metadata;
+                            if (meta.original_text_length) {
+                                stats.push('Original length: ' + meta.original_text_length + ' characters');
+                            }
+                            if (meta.humanized_text_length) {
+                                stats.push('Humanized length: ' + meta.humanized_text_length + ' characters');
+                            }
+                            if (meta.estimated_human_score) {
+                                stats.push('Estimated human score: ' + (meta.estimated_human_score * 100).toFixed(1) + '%');
+                            }
+                        }
+                        
+                        statsContent.html(stats.length > 0 ? stats.join(' | ') : 'Test completed');
+                        
+                        // Add success styling
+                        humanizedContent.parent().css('border-color', '#00a32a');
+                        humanizedContent.parent().css('background-color', '#f0f8f0');
+                        
+                    } else {
+                        humanizedContent.text('Humanization failed: ' + (data.error || 'Unknown error'));
+                        humanizedContent.parent().css('border-color', '#d63638');
+                        humanizedContent.parent().css('background-color', '#fef2f2');
+                        
+                        statsContent.text('Error: ' + (data.error || 'Unknown error'));
+                    }
+                    
+                } else {
+                    humanizedContent.text('Invalid response from server');
+                    humanizedContent.parent().css('border-color', '#d63638');
+                    statsContent.text('Server error or invalid response');
+                }
+                
+                resultsDiv.show();
+                
+            },
+            error: function(xhr, status, error) {
+                humanizedContent.text('Request failed: ' + error);
+                humanizedContent.parent().css('border-color', '#d63638');
+                statsContent.text('Network error or server issue');
+                resultsDiv.show();
+            },
+            complete: function() {
+                // Re-enable button
+                button.prop('disabled', false).text('Test Humanizer');
+            }
+        });
+    });
     
     // Add spinning animation for dashicons
     $('<style>').text(`
@@ -205,6 +406,18 @@ jQuery(document).ready(function($) {
         
         .aanp-progress-bar {
             transition: width 0.3s ease;
+        }
+        
+        .button.disabled {
+            pointer-events: none;
+        }
+        
+        #humanizer-test-results {
+            transition: opacity 0.3s ease;
+        }
+        
+        #humanizer-test-results.show {
+            opacity: 1;
         }
     `).appendTo('head');
     

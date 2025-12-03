@@ -22,7 +22,7 @@
 
 ### 1. Error Handling System
 - **Centralized Error Handler**: All errors flow through [`includes/class-error-handler.php`](includes/class-error-handler.php)
-  - Singleton pattern: `AANP_Error_Handler::getInstance()`
+  - Singleton pattern: `CP_Error_Handler::getInstance()`
   - Error categories: SYSTEM, NETWORK, API, DATABASE, SECURITY, USER_INPUT, CONFIGURATION, PERFORMANCE
   - Admin notices automatically generated for critical errors
   - Recovery strategies automatically triggered for specific error types
@@ -40,9 +40,9 @@
   - Log rotation when file exceeds 10MB
 
 - **Log Access**:
-  - Recent logs available via `AANP_Logger->get_recent_logs($lines = 100)`
-  - Log file can be cleared with `AANP_Logger->clear_logs()`
-  - Log level can be adjusted with `AANP_Logger->set_min_level($level)`
+  - Recent logs available via `ContentPilot_Logger->get_recent_logs($lines = 100)`
+  - Log file can be cleared with `ContentPilot_Logger->clear_logs()`
+  - Log level can be adjusted with `ContentPilot_Logger->set_min_level($level)`
 
 ### 3. Debugging Hidden Issues
 
@@ -54,7 +54,7 @@
 
 - **Cache Debugging**:
   ```php
-  $cache_manager = new AANP_Cache_Manager();
+  $cache_manager = new ContentPilot_Cache_Manager();
   $stats = $cache_manager->get_cache_stats();
   // Check cache hit/miss ratios
   ```
@@ -62,7 +62,7 @@
 #### Rate Limiting Issues
 - **Rate Limit Debugging**:
   ```php
-  $rate_limiter = new AANP_Rate_Limiter();
+  $rate_limiter = new ContentPilot_Rate_Limiter();
   $is_limited = $rate_limiter->is_rate_limited('ai_generation', 10, 3600);
   $stats = $rate_limiter->get_rate_limit_stats();
   ```
@@ -75,14 +75,14 @@
 #### Service Dependency Issues
 - **Service Registry Debugging**:
   ```php
-  $registry = new AANP_ServiceRegistry();
+  $registry = new ContentPilot_ServiceRegistry();
   $health_status = $registry->health_check();
   $services = $registry->get_registered_services();
   ```
 
 - **Service Orchestrator Debugging**:
   ```php
-  $orchestrator = new AANP_ServiceOrchestrator($registry);
+  $orchestrator = new ContentPilot_ServiceOrchestrator($registry);
   $workflow_result = $orchestrator->execute_workflow('workflow_name', $params);
   // Check $workflow_result for execution details
   ```
@@ -90,7 +90,7 @@
 ### 4. Content Verification Debugging
 - **Retraction Detection**:
   ```php
-  $verifier = new AANP_ContentVerifier();
+  $verifier = new ContentPilot_ContentVerifier();
   $result = $verifier->detect_retracted_content($url, $content);
   // Check $result['retracted'], $result['confidence'], $result['keywords_found']
   ```
@@ -103,7 +103,7 @@
 
 - **Verification Database**:
   ```php
-  $verification_db = new AANP_VerificationDatabase();
+  $verification_db = new ContentPilot_VerificationDatabase();
   $stats = $verification_db->get_verification_stats();
   $records = $verification_db->get_verification_records(array('limit' => 10));
   ```
@@ -111,7 +111,7 @@
 ### 5. Humanizer Debugging
 - **System Requirements Check**:
   ```php
-  $humanizer = new AANP_HumanizerManager();
+  $humanizer = new ContentPilot_HumanizerManager();
   $status = $humanizer->get_system_status();
   // Check $status['python_available'], $status['humano_available'], etc.
   ```
@@ -131,7 +131,7 @@
 ### 6. AI Provider Debugging
 - **Provider Configuration**:
   ```php
-  $ai_context = new AANP_AI_Generator_Context();
+  $ai_context = new ContentPilot_AI_Generator_Context();
   $providers = $ai_context->get_available_providers();
   // Check which providers are configured and available
   ```
@@ -173,7 +173,7 @@
 ### 9. Performance Debugging
 - **Connection Pool Debugging**:
   ```php
-  $pool_manager = new AANP_ConnectionPoolManager();
+  $pool_manager = new ContentPilot_ConnectionPoolManager();
   $stats = $pool_manager->get_pool_statistics();
   $db_health = $pool_manager->check_database_health();
   $http_health = $pool_manager->check_http_health();
@@ -181,7 +181,7 @@
 
 - **Queue Manager Debugging**:
   ```php
-  $queue_manager = new AANP_QueueManager();
+  $queue_manager = new ContentPilot_QueueManager();
   $stats = $queue_manager->get_queue_statistics();
   $worker_health = $queue_manager->check_worker_health();
   ```
@@ -192,7 +192,7 @@
   - RSS feed management: `/wp-admin/admin.php?page=aanp-rss-feeds`
   - Performance monitoring: `/wp-admin/admin.php?page=aanp-performance`
 
-- **Debug Mode**: Enable with `define('AANP_DEBUG', true);` in `wp-config.php`
+- **Debug Mode**: Enable with `define('CP_DEBUG', true);` in `wp-config.php`
   - Provides additional error details
   - Enables debug logging
   - Shows performance metrics
@@ -216,7 +216,7 @@
 
 4. **Humanizer Dependencies**: Offline humanization requires Python 3 and humano package
    - Check system requirements before enabling
-   - Test with `AANP_HumanizerManager->test_humanizer()`
+   - Test with `ContentPilot_HumanizerManager->test_humanizer()`
    - Verify Python script is executable
 
 5. **Service Dependencies**: Missing dependencies cause silent service failures

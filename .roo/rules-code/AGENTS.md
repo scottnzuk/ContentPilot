@@ -13,7 +13,7 @@
 - **Duplicate Detection**: Content similarity scoring for duplicate prevention [`includes/services/ContentFilterManager.php`](includes/services/ContentFilterManager.php)
 
 ## Error Handling
-- Centralized: `AANP_Error_Handler::getInstance()->handle_error($msg, $context, $category)` [`includes/class-error-handler.php`](includes/class-error-handler.php)
+- Centralized: `CP_Error_Handler::getInstance()->handle_error($msg, $context, $category)` [`includes/class-error-handler.php`](includes/class-error-handler.php)
 - Custom exceptions from [`includes/class-exceptions.php`](includes/class-exceptions.php)
 
 ## Performance Optimization
@@ -21,7 +21,7 @@
 - **Caching**: Invalidate after modifications via [`includes/class-cache-manager.php`](includes/class-cache-manager.php): `$cache_manager->delete($key)`
 
 ## Security
-- Sanitize: `AANP_Security_Manager->deep_sanitize($data)` [`includes/class-security-manager.php`](includes/class-security-manager.php)
+- Sanitize: `ContentPilot_Security_Manager->deep_sanitize($data)` [`includes/class-security-manager.php`](includes/class-security-manager.php)
 - API keys encrypted with `wp_salt('auth')`
 
 ## Database

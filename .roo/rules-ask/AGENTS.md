@@ -84,9 +84,9 @@
   - `aanp_analytics` - Performance analytics data
 
 - **Environment Variables**:
-  - `AANP_DEBUG` - Enable debug mode (set to `true`)
-  - `AANP_HUMANIZER_DISABLE` - Disable humanizer integration
-  - `AANP_CACHE_DISABLE` - Disable caching system
+  - `CP_DEBUG` - Enable debug mode (set to `true`)
+  - `CP_HUMANIZER_DISABLE` - Disable humanizer integration
+  - `CP_CACHE_DISABLE` - Disable caching system
 
 - **Hidden Admin Pages**:
   - `/wp-admin/admin.php?page=aanp-verification` - Content verification dashboard
